@@ -1,3 +1,3 @@
 # satrday
 
-View the [slides](https://github.com/tiagomendonca/satrday19/satrday_TiagoMendonca.html)
+View the [slides](https://tiagomendonca.github.io/satrday19#1)
