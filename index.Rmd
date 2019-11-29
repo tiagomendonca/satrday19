@@ -155,7 +155,7 @@ dados_mds %>%
 
 # Motivação
 
-Distäncia dos pontos em $\mathbb{R}^3$
+Distância dos pontos em $\mathbb{R}^3$
 ```{r, echo = FALSE, dev = "svg"}
 
 dist_eucl <- as.matrix(dist_eucl)
@@ -204,7 +204,7 @@ dist_mds %>%
 
 class: inverse, center, middle
 
-# Aplicação
+# Aplicação ao  Mercado Automotivo
 
 
 
@@ -533,7 +533,7 @@ Os clusters formados podem ser utilizados de diversas maneiras:
 
 --
 
-- **sistemas de recomendação** simples também podem ser construídos. Por exemplo, usuários que navegaram na Internet fazendo buscas pelo modelo “Saveiro”, poderiam ser expostos a anúncios de modelos do mesmo cluster (“Pálio”, “Parati” etc).
+- **sistemas de recomendação** simples também podem ser construídos. Por exemplo, usuários que navegaram na Internet fazendo buscas pelo modelo “Saveiro”, poderiam ser expostos a anúncios de modelos do mesmo cluster (“Palio”, “Parati” etc).
 
 
 ---
