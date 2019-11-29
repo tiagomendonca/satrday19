@@ -2,7 +2,7 @@
 title: "Uma Aplicação de MDS ao Mercado Automotivo"
 author: "Tiago Mendonça"
 institute: "Insper"
-date: ' `r icon::fa("user-circle")` [**tiagoms.com**](https://www.tiagoms.com/) <br>' 
+date: ' `r icon::fa("user-circle")` [**tiagoms.com**](https://www.tiagoms.com/) <br>  `r icon::fa("github")` [**tiagomendonca**](https://github.com/tiagomendonca) <br>' 
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts]
