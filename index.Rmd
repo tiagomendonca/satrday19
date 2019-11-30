@@ -5,8 +5,8 @@ institute: "Insper"
 date: ' `r icon::fa("user-circle")` [**tiagoms.com**](https://www.tiagoms.com/) <br>  `r icon::fa("github")` [**tiagomendonca**](https://github.com/tiagomendonca) <br>' 
 output:
   xaringan::moon_reader:
-    css: [default, metropolis, metropolis-fonts]
     chakra: libs/remark-latest.min.js
+    css: [default, metropolis, metropolis-fonts]
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -156,6 +156,7 @@ dados_mds %>%
 # Motivação
 
 Distância dos pontos em $\mathbb{R}^3$
+
 ```{r, echo = FALSE, dev = "svg"}
 
 dist_eucl <- as.matrix(dist_eucl)
@@ -169,7 +170,8 @@ dist_eucl %>%
 
 
 
-Distäncia dos pontos pelo **MDS** (em $\mathbb{R}^2$)
+Distância dos pontos pelo **MDS** (em $\mathbb{R}^2$)
+
 ```{r, echo = FALSE, dev = "svg"}
 dist_eucl <- as.matrix(dist_eucl)
 dimnames(dist_eucl) <- list(dados$Pais, dados$Pais)
@@ -290,16 +292,14 @@ dissim %>%
 # Matriz de Dissimilaridades
 
 ```{r, echo = TRUE, eval = FALSE}
-ggplotly(
-  dissim %>%
-    mutate("mod1" = rownames(dissim)) %>% 
-    pivot_longer(-mod1, names_to = "mod2", values_to = "dissim") %>% 
-    ggplot(aes(mod1, mod2, fill = dissim)) + 
-      geom_tile() + xlab("") + ylab("") + 
-      scale_fill_gradient(low = "white", high = "red4", 
-                          limit = c(0,1), name = "Dissimilaridades") + 
-      theme(axis.text.x = element_text(angle = 90))
-)
+dissim %>%
+  mutate("mod1" = rownames(dissim)) %>% 
+  pivot_longer(-mod1, names_to = "mod2", values_to = "dissim") %>% 
+  ggplot(aes(mod1, fct_rev(mod2), fill = dissim)) + 
+    geom_tile() + xlab("") + ylab("") + 
+    scale_fill_gradient(low = "white", high = "red4", 
+                        limit = c(0,1), name = "Dissimilaridades") + 
+    theme(axis.text.x = element_text(angle = 90))
 
 ```
 
@@ -312,18 +312,16 @@ ggplotly(
 # Matriz de Dissimilaridades
 
 
-```{r, echo = FALSE, out.width="90%", out.height="105%", dev = "svg"}
+```{r, echo = FALSE, fig.width=10, fig.height=8, dev = "svg"}
 
-ggplotly(
-  dissim %>%
-    mutate("mod1" = rownames(dissim)) %>% 
-    pivot_longer(-mod1, names_to = "mod2", values_to = "dissim") %>% 
-    ggplot(aes(mod1, fct_rev(mod2), fill = dissim)) + 
-      geom_tile() + xlab("") + ylab("") + 
-      scale_fill_gradient(low = "white", high = "red4", 
-                          limit = c(0,1), name = "Dissimilaridades") + 
-      theme(axis.text.x = element_text(angle = 90))
-)
+dissim %>%
+  mutate("mod1" = rownames(dissim)) %>% 
+  pivot_longer(-mod1, names_to = "mod2", values_to = "dissim") %>% 
+  ggplot(aes(mod1, fct_rev(mod2), fill = dissim)) + 
+    geom_tile() + xlab("") + ylab("") + 
+    scale_fill_gradient(low = "white", high = "red4", 
+                        limit = c(0,1), name = "Dissimilaridades") + 
+    theme(axis.text.x = element_text(angle = 90))
 
 ```
 
@@ -622,11 +620,6 @@ fviz_dend(hc,
 
 
 
-
-
-
-
-
 ---
 
 # Mercado de Whisky
@@ -669,9 +662,10 @@ df <- data.frame(wishky = rownames(mds$points),
                  cluster = factor(clusters))
 
 ggplot(df, aes(x = coord1, y = coord2, label = rownames(df))) +
-    geom_point(aes(color = cluster), alpha = 0.55, size = 4) +
-    xlab("Coordenada 1") + ylab("Coordenada 2") + 
-    geom_text_repel() + theme_bw()
+  geom_point(aes(color = cluster), alpha = 0.55, size = 4) +
+  xlab("Coordenada 1") + ylab("Coordenada 2") + 
+  geom_text_repel(size = 6) + 
+  theme_bw()
 ```
 
 
@@ -694,9 +688,10 @@ df <- data.frame(wishky = rownames(mds$points),
                  cluster = factor(clusters))
 
 ggplot(df, aes(x = coord1, y = coord2, label = rownames(df))) +
-    geom_point(aes(color = cluster), alpha = 0.55, size = 4) +
-    xlab("Coordenada 1") + ylab("Coordenada 2") + 
-    geom_text_repel(size = 6) + theme_bw()
+  geom_point(aes(color = cluster), alpha = 0.55, size = 4) +
+  xlab("Coordenada 1") + ylab("Coordenada 2") + 
+  geom_text_repel(size = 6) + 
+  theme_bw()
 ```
 
 
@@ -707,7 +702,7 @@ ggplot(df, aes(x = coord1, y = coord2, label = rownames(df))) +
 # Mercado de Whisky
 
 
-Os clusters obtidos revelam a estrutura de concorrência no mercado de Scotch whisky que pode ser utilizara para:
+Os clusters obtidos revelam a estrutura de concorrência no mercado de Scotch whisky que pode ser utilizada para:
 
 - formação de estoques e pedidos de compra
 
@@ -718,6 +713,80 @@ Os clusters obtidos revelam a estrutura de concorrência no mercado de Scotch wh
 --
 
 - sistemas de recomendação.
+
+
+
+
+
+---
+
+class: inverse, center, middle
+
+# Aplicação em Random Forest
+
+
+
+
+
+
+---
+
+# Random Forest
+
+
+```{r, echo = TRUE, eval = FALSE}
+library(ISLR)
+library(randomForest)
+
+rf <- randomForest(Balance ~ ., Credit[,-1], proximity = TRUE)
+
+mds <- cmdscale(1 - rf$proximity, eig = TRUE)
+
+Credit %>% 
+  mutate(coord1 = mds$points[,1], 
+         coord2 = mds$points[,2]) %>% 
+  ggplot(aes(x = coord1, y = coord2)) +
+    geom_point(aes(color = Limit, size = Rating, shape = Gender), alpha = .5) + 
+    xlab("Coordenada 1") + ylab("Coordenada 2") + 
+    ggtitle("Balance") + 
+    theme_bw() + 
+    scale_color_continuous(low = "plum1", high = "purple4") + 
+    guides(shape = guide_legend(override.aes = list(size = 5)))
+
+```
+
+
+Esses dados (*Credit*) estão no pacote [ISLR](https://cran.r-project.org/web/packages/ISLR/index.html).
+
+
+---
+
+# Random Forest
+
+
+```{r, echo = FALSE, fig.width=12, fig.height=8, dev = "svg"}
+
+library(ISLR)
+library(randomForest)
+
+rf <- randomForest(Balance ~ ., Credit[,-1], proximity = TRUE)
+
+mds <- cmdscale(1 - rf$proximity, eig = TRUE)
+
+Credit %>% 
+  mutate(coord1 = mds$points[,1], 
+         coord2 = mds$points[,2]) %>% 
+  ggplot(aes(x = coord1, y = coord2)) +
+    geom_point(aes(color = Limit, size = Rating, shape = Gender), alpha = .5) + 
+    xlab("Coordenada 1") + ylab("Coordenada 2") + 
+    ggtitle("Balance") + 
+    theme_bw() + 
+    scale_color_continuous(low = "plum1", high = "purple4") + 
+    guides(shape = guide_legend(override.aes = list(size = 5)))
+
+
+```
+
 
 
 
@@ -732,9 +801,10 @@ Mais exemplos podem ser encontrados no livro [Data Science, Marketing & Business
 
 Contato e redes sociais em [**tiagoms.com**](https://tiagoms.com)
 
+Um agradecimento especial aos **organizadores** e **patrocinadores** do evento! 
+
 Apresentação criada no pacote [xaringan](https://github.com/yihui/xaringan).
 
-Um agradecimento especial aos **organizadores** e **patrocinadores** do evento! 
 
 
 
